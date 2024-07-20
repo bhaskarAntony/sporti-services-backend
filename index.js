@@ -15,10 +15,10 @@ const PORT = process.env.PORT || 5000;
 
 // CORS configuration
 app.use(cors({
-    origin: 'http://localhost:3000', // Frontend URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true, // Allow cookies to be sent with requests
-  }));
+  origin: ['http://localhost:3000', 'https://www.sporti.ksp.gov.in', 'https://sporti2.vercel.app'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true, // Allow cookies to be sent with requests
+}));
 app.use(express.json());
 app.use(cookieParser());
 
