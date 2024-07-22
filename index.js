@@ -17,8 +17,8 @@ const PORT = process.env.PORT || 5000;
 
 // CORS configuration
 app.use(cors({
-  origin: ['http://localhost:3000','https://sporti-admin.vercel.app', 'http://localhost:3001', 'https://www.sporti.ksp.gov.in', 'https://sporti2.vercel.app'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: ['http://localhost:3000','https://sporti-admin.vercel.app','https://sporti-admin.vercel.app/bookings', 'http://localhost:3001', 'https://www.sporti.ksp.gov.in', 'https://sporti2.vercel.app'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true, // Allow cookies to be sent with requests
 }));
 app.use(express.json());
