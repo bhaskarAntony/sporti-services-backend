@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admin');
+const adminBookings = require('./routes/adminBooking');
 const bookingRoutes = require('./routes/servicebooking');
 const cors = require('cors')
 
@@ -15,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 
 // CORS configuration
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://www.sporti.ksp.gov.in', 'https://sporti2.vercel.app'],
+  origin: ['http://localhost:3000','https://sporti-admin.vercel.app', 'http://localhost:3001', 'https://www.sporti.ksp.gov.in', 'https://sporti2.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true, // Allow cookies to be sent with requests
 }));
@@ -24,6 +26,8 @@ app.use(cookieParser());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/admin', adminBookings);
 app.use('/api/sporti/service', bookingRoutes);
 
 // MongoDB Connection
