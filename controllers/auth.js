@@ -4,6 +4,9 @@ const User = require('../models/user');
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
+  if(email.length>30 || password.length>30 || name.length > 40){
+    return res.status(400).json({ error: 'Invalid input length' });
+  }
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -35,7 +38,12 @@ const login = async (req, res) => {
 
     const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+    // Set the token as a cookie
+    res.cookie('token', token, { 
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === 'production', // Secure cookies only in production
+      sameSite: 'Strict' // Protect against cross-site request forgery
+    });
     res.status(200).json({ user, token });
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong' });
