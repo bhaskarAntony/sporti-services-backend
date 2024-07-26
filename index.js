@@ -10,13 +10,18 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error(err));
+
 // Middleware for HTTPS redirection
-app.use((req, res, next) => {
-  if (req.secure) {
-    return next();
-  }
-  res.redirect('https://' + req.headers.host + req.url);
-});
+// app.use((req, res, next) => {
+//   if (req.secure) {
+//     return next();
+//   }
+//   res.redirect('https://' + req.headers.host + req.url);
+// });
 
 // Security headers
 app.use(helmet());
@@ -26,7 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Helmet configuration to add HSTS header
+// // Helmet configuration to add HSTS header
 app.use(helmet.hsts({
   maxAge: 31536000,  // 1 year
   includeSubDomains: true,
@@ -34,7 +39,7 @@ app.use(helmet.hsts({
 }));
 
 app.use(express.json());
-app.use(cookieParser());
+// app.use(cookieParser());
 
 // CORS configuration
 app.use(cors({
@@ -54,10 +59,6 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/admin', adminBookings);
 app.use('/api/sporti/service', bookingRoutes);
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error(err));
 
 // Start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
