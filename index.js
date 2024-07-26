@@ -38,7 +38,7 @@ app.use(cookieParser());
 
 // CORS configuration
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://sporti-admin.vercel.app', 'https://sporti-admin.vercel.app/bookings', 'http://localhost:3001', 'https://www.sporti.ksp.gov.in', 'https://sporti2.vercel.app'],
+  origin: ['http://localhost:3000', 'https://sporti-admin.vercel.app', 'https://sporti-admin.vercel.app/bookings', 'http://localhost:3001', 'https://www.sporti.ksp.gov.in', 'https://sporti2.vercel.app', 'https://www.sporti.ksp.gov.in/login'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true, // Allow cookies to be sent with requests
 }));
