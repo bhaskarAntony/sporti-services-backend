@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const cors = require('cors');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 
 dotenv.config();
 
@@ -16,6 +18,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .catch(err => console.error(err));
 
 // Middleware for HTTPS redirection
+// Uncomment if using HTTPS
 // app.use((req, res, next) => {
 //   if (req.secure) {
 //     return next();
@@ -25,13 +28,18 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
 // Security headers
 app.use(helmet());
+app.use(cookieParser());
+
+// Security headers
 app.use((req, res, next) => {
-  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://trusted.cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' http://localhost:3001 https://www.sporti.ksp.gov.in https://sporti-admin.vercel.app https://sporti-services-backend.onrender.com http://localhost:5000 https://sporti2.vercel.app; frame-ancestors 'self';");
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN')
   res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
   next();
 });
 
-// // Helmet configuration to add HSTS header
+
 app.use(helmet.hsts({
   maxAge: 31536000,  // 1 year
   includeSubDomains: true,
@@ -39,11 +47,12 @@ app.use(helmet.hsts({
 }));
 
 app.use(express.json());
-// app.use(cookieParser());
+app.use(mongoSanitize());
+app.use(xss());
 
 // CORS configuration
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://sporti-admin.vercel.app', 'https://sporti-admin.vercel.app/bookings', 'http://localhost:3001', 'https://www.sporti.ksp.gov.in', 'https://sporti2.vercel.app', 'https://www.sporti.ksp.gov.in/login'],
+  origin: ['http://localhost:3000','http://localhost:3003', 'https://sporti-admin.vercel.app', 'https://sporti-admin.vercel.app/bookings', 'http://localhost:3001', 'https://www.sporti.ksp.gov.in', 'https://sporti2.vercel.app', 'https://www.sporti.ksp.gov.in/login', 'https://sporti-admin.vercel.app/login', 'https://sporti-admin.vercel.app/dashbord', 'https://sporti-admin.vercel.app/bookings'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true, // Allow cookies to be sent with requests
 }));
@@ -58,7 +67,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin', adminBookings);
 app.use('/api/sporti/service', bookingRoutes);
-
 
 // Start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
