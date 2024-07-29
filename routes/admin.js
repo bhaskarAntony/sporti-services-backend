@@ -31,12 +31,11 @@ router.post('/login', async (req, res) => {
         const token = jwt.sign({ id: user._id, role: user.role }, secret, { expiresIn: '1h' });
       
 
-            // Set the token as a cookie
-            res.cookie('token', token, { 
+        res.cookie('token', token, { 
             HttpOnly: true, 
             secure: process.env.NODE_ENV === 'production', // Secure cookies only in production
             sameSite: 'Strict' // Protect against cross-site request forgery
-            });
+          });
             res.status(200).json({ user, token });
     } catch (error) {
         res.status(500).json({ error: error.message });
