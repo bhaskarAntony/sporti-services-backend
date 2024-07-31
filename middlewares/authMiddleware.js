@@ -1,8 +1,10 @@
+const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 
 // Middleware to authenticate token
 const authenticateToken = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1] || req.cookies.token;
+  const token = req.headers['authorization']?.split(' ')[1] || cookieParser.signedCookies('token');
+  console.log(token);
 
   if (!token) {
     return res.status(403).json({ message: 'No token provided' });

@@ -4,7 +4,7 @@ const User = require('../models/user');
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
-  if(email.length>30 || password.length>30 || name.length > 40){
+  if (email.length > 30 || password.length > 30 || name.length > 40) {
     return res.status(400).json({ error: 'Invalid input length' });
   }
   try {
@@ -40,17 +40,19 @@ const login = async (req, res) => {
 
     // Set the token as a cookie
     res.cookie('token', token, { 
-      HttpOnly: true, 
-      secure: process.env.NODE_ENV === 'production', // Secure cookies only in production
-      sameSite: 'Strict' // Protect against cross-site request forgery
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === 'production', 
+      sameSite: 'Strict',
+      maxAge: 3600000 // 1 hour
     });
-    res.status(200).json({ user, token });
+    res.status(200).json({ user });
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong' });
   }
 };
+
 const validateToken = (req, res) => {
-    
   res.status(200).json({ user: req.user });
 };
+
 module.exports = { register, login, validateToken };
