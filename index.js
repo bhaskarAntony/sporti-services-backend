@@ -31,7 +31,7 @@ app.use(helmet.hsts({
 app.use((req, res, next) => {
   res.setHeader('Content-Security-Policy', 
     "default-src 'self';" +
-    "script-src 'self' 'unsafe-inline' https://fonts.googleapis.com http://localhost:3000; " +
+    "script-src 'self' 'unsafe-inline' https://fonts.googleapis.com" +
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
     "img-src 'self' data:; " +
     "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; " +
