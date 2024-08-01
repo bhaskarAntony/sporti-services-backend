@@ -66,11 +66,8 @@ app.use(xss());
 // CORS configuration
 app.use(cors({
   origin: [
-    'http://localhost:3000',
-    'http://localhost:3003',
     'https://sporti-admin.vercel.app',
     'https://sporti-admin.vercel.app/bookings',
-    'http://localhost:3001',
     'https://www.sporti.ksp.gov.in',
     'https://sporti2.vercel.app',
     'https://www.sporti.ksp.gov.in/login',
