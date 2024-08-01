@@ -38,7 +38,6 @@ const login = async (req, res) => {
 
     const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    // Set the token as a cookie
     res.cookie('token', token, { 
       httpOnly: true, 
       secure: process.env.NODE_ENV === 'production', 

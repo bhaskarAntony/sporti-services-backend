@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const authenticateToken = require('./middlewares/authMiddleware')
 
 dotenv.config();
 
@@ -13,7 +14,15 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Apply security headers using helmet
+// Apply security headers using helmet
 app.use(helmet());
+app.use(helmet.frameguard({ action: 'deny' }));
+app.use(helmet.hsts({
+  maxAge: 31536000,  // 1 year
+  includeSubDomains: true,
+  preload: true
+}));
+
 app.use((req, res, next) => {
   res.setHeader('Content-Security-Policy', 
     "default-src 'self'; " +
@@ -37,9 +46,11 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .catch(err => console.error(err));
 
 // Middlewares
-app.use(cookieParser('your-secret-key'));
+// app.use(authenticateToken);
+app.use(cookieParser(process.env.JWT_SECRET)); // No secret for unsigned cookies
 app.use(express.json());
 app.use(mongoSanitize());
+
 app.use(xss());
 
 // CORS configuration
